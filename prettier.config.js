@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const styleguide = require('@vercel/style-guide/prettier');
 
 module.exports = {
