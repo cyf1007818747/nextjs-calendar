@@ -1,5 +1,5 @@
-## Next.js App Router Course - Starter
+## Next.js Calendar
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+This is an Next JS Calendar app containerized in Docker, using GraphQL, Prisma, deployed on AWS Kubernetics.
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+This project is ongoing.
