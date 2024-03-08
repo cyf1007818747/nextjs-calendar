@@ -134,7 +134,6 @@ export async function fetchCardData() {
       },
     });
 
-    // Await all promises simultaneously
     const [invoiceCount, customerCount, invoiceStatus] = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
