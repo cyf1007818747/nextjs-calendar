@@ -93,29 +93,69 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = pool.query(`SELECT COUNT(*) FROM invoices`);
-    const customerCountPromise = pool.query(`SELECT COUNT(*) FROM customers`);
-    const invoiceStatusPromise = pool.query(`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`);
 
-    const data = await Promise.all([
+    // const invoiceCountPromise0 = pool.query(`SELECT COUNT(*) FROM invoices`);
+    // const customerCountPromise0 = pool.query(`SELECT COUNT(*) FROM customers`);
+    // const invoiceStatusPromise0 = pool.query(`SELECT
+    // SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
+    // SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
+    // FROM invoices`);
+
+    // const data = await Promise.all([
+    //   invoiceCountPromise0,
+    //   customerCountPromise0,
+    //   invoiceStatusPromise0,
+    // ]);
+
+    // const numberOfInvoices = Number(data[0].rows[0].count ?? "0");
+    // const numberOfCustomers = Number(data[1].rows[0].count ?? "0");
+    // const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? "0");
+    // const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? "0");
+
+    // return {
+    //   numberOfCustomers,
+    //   numberOfInvoices,
+    //   totalPaidInvoices,
+    //   totalPendingInvoices,
+    // };
+
+    // Initialize multiple queries in parallel
+    const invoiceCountPromise = prisma.invoices.count();
+    const customerCountPromise = prisma.customers.count();
+    const invoiceStatusPromise = prisma.invoices.groupBy({
+      by: ["status"],
+      _sum: {
+        amount: true,
+      },
+      where: {
+        status: {
+          in: ["paid", "pending"],
+        },
+      },
+    });
+
+    // Await all promises simultaneously
+    const [invoiceCount, customerCount, invoiceStatus] = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
     ]);
 
-    const numberOfInvoices = Number(data[0].rows[0].count ?? "0");
-    const numberOfCustomers = Number(data[1].rows[0].count ?? "0");
-    const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? "0");
-    const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? "0");
+    // Process results
+    const totalPaidInvoices =
+      invoiceStatus.find((s) => s.status === "paid")?._sum.amount ?? 0;
+    const totalPendingInvoices =
+      invoiceStatus.find((s) => s.status === "pending")?._sum.amount ?? 0;
+
+    // Formatting the currency should be handled by a utility function
+    const formattedTotalPaidInvoices = formatCurrency(totalPaidInvoices);
+    const formattedTotalPendingInvoices = formatCurrency(totalPendingInvoices);
 
     return {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
+      numberOfCustomers: customerCount,
+      numberOfInvoices: invoiceCount,
+      totalPaidInvoices: formattedTotalPaidInvoices,
+      totalPendingInvoices: formattedTotalPendingInvoices,
     };
   } catch (error) {
     console.error("Database Error:", error);
