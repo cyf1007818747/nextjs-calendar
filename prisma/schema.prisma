@@ -8,30 +8,38 @@ datasource db {
 }
 
 model Customers {
-  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String     @db.VarChar(255)
   email     String     @db.VarChar(255)
   image_url String     @db.VarChar(255)
   Invoices  Invoices[]
+
+  @@map("customers")
 }
 
 model Invoices {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   customer    Customers @relation(fields: [customer_id], references: [id])
   customer_id String    @db.Uuid
   amount      Int
   status      String    @db.VarChar(255)
   date        DateTime  @db.Date
+
+  @@map("invoices")
 }
 
 model Revenue {
   month   String @unique @db.VarChar(4)
   revenue Int
+
+  @@map("revenue")
 }
 
 model Users {
-  id       String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name     String @db.VarChar(255)
   email    String @unique
   password String
+
+  @@map("users")
 }
