@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Customers {
-  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id        String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name      String     @db.VarChar(255)
   email     String     @db.VarChar(255)
   image_url String     @db.VarChar(255)
@@ -18,7 +18,7 @@ model Customers {
 }
 
 model Invoices {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   customer    Customers @relation(fields: [customer_id], references: [id])
   customer_id String    @db.Uuid
   amount      Int
@@ -36,7 +36,7 @@ model Revenue {
 }
 
 model Users {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id       String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name     String @db.VarChar(255)
   email    String @unique
   password String
