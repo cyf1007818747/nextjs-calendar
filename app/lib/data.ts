@@ -1,6 +1,5 @@
 // import { sql } from "@vercel/postgres";
-import pool from "@/app/lib/db";
-import { PrismaClient } from "@prisma/client";
+import { pool, prisma } from "@/app/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 import {
   CustomerField,
@@ -11,8 +10,6 @@ import {
   User,
 } from "./definitions";
 import { formatCurrency } from "./utils";
-
-const prisma = new PrismaClient();
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
