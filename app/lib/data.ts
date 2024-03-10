@@ -50,7 +50,7 @@ export async function fetchLatestInvoices() {
     //   amount: formatCurrency(invoice.amount),
     // }));
 
-    const data = await prisma.invoices.findMany({
+    const data = await prisma.invoice.findMany({
       orderBy: {
         date: "desc",
       },
@@ -117,9 +117,9 @@ export async function fetchCardData() {
     // };
 
     // Initialize multiple queries in parallel
-    const invoiceCountPromise = prisma.invoices.count();
-    const customerCountPromise = prisma.customers.count();
-    const invoiceStatusPromise = prisma.invoices.groupBy({
+    const invoiceCountPromise = prisma.invoice.count();
+    const customerCountPromise = prisma.customer.count();
+    const invoiceStatusPromise = prisma.invoice.groupBy({
       by: ["status"],
       _sum: {
         amount: true,
