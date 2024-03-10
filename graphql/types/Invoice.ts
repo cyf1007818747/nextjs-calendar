@@ -8,6 +8,9 @@ builder.prismaObject("Invoice", {
     customer_id: t.exposeString("customer_id"),
     amount: t.exposeInt("amount"),
     status: t.exposeString("status"),
+    date: t.expose("date", {
+      type: "Date",
+    }),
   }),
 });
 
