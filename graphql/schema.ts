@@ -2,7 +2,7 @@ import "./types/Customer";
 import "./types/Invoice";
 import { builder } from "./builder";
 
-export const schema = builder.toSchema()
+export const schema = builder.toSchema();
 
 // export const typeDefs = `
 //   type Link {
@@ -16,10 +16,10 @@ export const schema = builder.toSchema()
 //   }
 
 //   type Customer {
-//     id:        ID    
-//     name:      String     
-//     email:     String     
-//     image_url: String     
+//     id:        ID
+//     name:      String
+//     email:     String
+//     image_url: String
 //   }
 
 //   type Query {
